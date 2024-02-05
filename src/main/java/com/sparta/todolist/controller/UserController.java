@@ -3,10 +3,9 @@ package com.sparta.todolist.controller;
 import com.sparta.todolist.dto.requestDto.SignupRequestDto;
 import com.sparta.todolist.service.UserService;
 import jakarta.validation.Valid;
-import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
-import lombok.Value;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
@@ -37,9 +36,8 @@ public class UserController {
             }
         } else {
             userService.signup(signupRequestDto);
-            return ResponseEntity.ok("회원가입에 성공하였습니다.");
+            return ResponseEntity.status(HttpStatus.CREATED).body("회원가입에 성공하였습니다.");
         }
-        return ResponseEntity.badRequest().body("회원가입에 실패하였습니다.");
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("회원가입에 실패하였습니다.");
     }
-
 }
