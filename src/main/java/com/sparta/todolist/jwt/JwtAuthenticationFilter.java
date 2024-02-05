@@ -2,6 +2,7 @@ package com.sparta.todolist.jwt;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sparta.todolist.dto.requestDto.LoginRequestDto;
+import com.sparta.todolist.dto.responseDto.SigninResponseDto;
 import com.sparta.todolist.sercurity.UserDetailsImpl;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.http.HttpServletRequest;
@@ -42,16 +43,30 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     }
 
     @Override
-    protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authResult) {
+    protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authResult) throws IOException {
         String username = ((UserDetailsImpl) authResult.getPrincipal()).getUsername();
 
         String token = jwtUtil.createToken(username);
         response.addHeader(JwtUtil.AUTHORIZATION_HEADER, token);
+        response.setStatus(200);
+
+        // 응답 생성
+        SigninResponseDto signinResponseDto = new SigninResponseDto("로그인 성공", 200);
+        // JSON으로 변환하여 응답
+        response.setContentType("application/json");
+        response.setCharacterEncoding("UTF-8");
+        response.getWriter().write(new ObjectMapper().writeValueAsString(signinResponseDto));
     }
 
     @Override
-    protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response, AuthenticationException failed) {
+    protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response, AuthenticationException failed) throws IOException {
         response.setStatus(401);
-    }
 
+        // 응답 생성
+        SigninResponseDto signinResponseDto = new SigninResponseDto("로그인 실패", 401);
+        // JSON으로 변환하여 응답
+        response.setContentType("application/json");
+        response.setCharacterEncoding("UTF-8");
+        response.getWriter().write(new ObjectMapper().writeValueAsString(signinResponseDto));
+    }
 }

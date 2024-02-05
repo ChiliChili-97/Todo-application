@@ -1,6 +1,7 @@
 package com.sparta.todolist.controller;
 
 import com.sparta.todolist.dto.requestDto.SignupRequestDto;
+import com.sparta.todolist.dto.responseDto.SignupResponseDto;
 import com.sparta.todolist.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -27,17 +28,21 @@ public class UserController {
 
     // 회원가입 컨트롤러
     @PostMapping("/signup")
-    public ResponseEntity<String> signup(@Valid @RequestBody SignupRequestDto signupRequestDto, BindingResult bindingResult) {
+    public ResponseEntity<SignupResponseDto> signup(@Valid @RequestBody SignupRequestDto signupRequestDto, BindingResult bindingResult) {
         // 검증 예외 처리
         List<FieldError> fieldErrors = bindingResult.getFieldErrors();
+
         if (!fieldErrors.isEmpty()) {
             for (FieldError fieldError : bindingResult.getFieldErrors()) {
                 log.error(fieldError.getField() + " 필드 : " + fieldError.getDefaultMessage());
             }
+            SignupResponseDto responseDto = new SignupResponseDto("회원가입 실패", 403);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(responseDto);
+
         } else {
             userService.signup(signupRequestDto);
-            return ResponseEntity.status(HttpStatus.CREATED).body("회원가입에 성공하였습니다.");
+            SignupResponseDto responseDto = new SignupResponseDto("회원가입 성공", 200);
+            return ResponseEntity.status(HttpStatus.OK).body(responseDto);
         }
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("회원가입에 실패하였습니다.");
     }
 }
