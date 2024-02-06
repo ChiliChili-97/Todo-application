@@ -14,6 +14,7 @@ public class GetTodoResponseDto {
     private Long id;
     private String title;
     private String content;
+    private boolean isComplete;
     private LocalDateTime createdAt;
     private LocalDateTime modifiedAt;
 
@@ -21,6 +22,7 @@ public class GetTodoResponseDto {
         this.id = todoCard.getTodocardId();
         this.title = todoCard.getTitle();
         this.content = todoCard.getContent();
+        this.isComplete = todoCard.isComplete();
         this.createdAt = todoCard.getCreatedAt();
         this.modifiedAt = todoCard.getModifiedAt();
     }

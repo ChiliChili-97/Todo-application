@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
-public class UpateTodoRequest {
+public class UpdateTodoRequest {
 
     private String title;
     private String content;

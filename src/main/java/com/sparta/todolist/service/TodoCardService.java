@@ -1,7 +1,8 @@
 package com.sparta.todolist.service;
 
+import com.sparta.todolist.dto.requestDto.IsCompleteRequestDto;
 import com.sparta.todolist.dto.requestDto.TodoPostRequestDto;
-import com.sparta.todolist.dto.requestDto.UpateTodoRequest;
+import com.sparta.todolist.dto.requestDto.UpdateTodoRequest;
 import com.sparta.todolist.dto.responseDto.TodoPostResponseDto;
 import com.sparta.todolist.entity.TodoCard;
 import com.sparta.todolist.entity.User;
@@ -37,11 +38,20 @@ public class TodoCardService {
 
     // 카드 업데이트
     @Transactional
-    public TodoCard update(Long id, UpateTodoRequest upateTodoRequest) {
+    public TodoCard update(Long id, UpdateTodoRequest updateTodoRequest) {
         TodoCard todoCard = todoCardRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Not found : " + id));
 
-        todoCard.update(upateTodoRequest.getTitle(), upateTodoRequest.getContent());
+        todoCard.update(updateTodoRequest.getTitle(), updateTodoRequest.getContent());
         return todoCard;
+    }
+
+    // 할일 완료
+    @Transactional
+    public void isComplete(Long id, IsCompleteRequestDto isCompleteRequestDto, User user) {
+        TodoCard todoCard = todoCardRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Not found : " + id));
+
+        todoCard.completeTodo();
     }
 }

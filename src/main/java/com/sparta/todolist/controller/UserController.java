@@ -6,7 +6,6 @@ import com.sparta.todolist.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
@@ -37,12 +36,12 @@ public class UserController {
                 log.error(fieldError.getField() + " 필드 : " + fieldError.getDefaultMessage());
             }
             SignupResponseDto responseDto = new SignupResponseDto("회원가입 실패", 403);
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(responseDto);
+            return ResponseEntity.badRequest().body(responseDto);
 
         } else {
             userService.signup(signupRequestDto);
             SignupResponseDto responseDto = new SignupResponseDto("회원가입 성공", 200);
-            return ResponseEntity.status(HttpStatus.OK).body(responseDto);
+            return ResponseEntity.ok().body(responseDto);
         }
     }
 }

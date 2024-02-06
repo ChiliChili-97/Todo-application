@@ -22,6 +22,9 @@ public class TodoCard extends TimeStamp {
     @Column(name = "content", nullable = false)
     private String content;
 
+    @Column(name = "isComplete", nullable = false)
+    private boolean isComplete = false;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
@@ -35,5 +38,9 @@ public class TodoCard extends TimeStamp {
     public void update(String title, String content) {
         this.title = title;
         this.content = content;
+    }
+
+    public void completeTodo() {
+        this.isComplete = !this.isComplete;
     }
 }
