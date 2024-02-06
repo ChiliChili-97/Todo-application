@@ -31,4 +31,9 @@ public class TodoCard extends TimeStamp {
         this.content = todoPostRequestDto.getContent();
         this.user = user;
     }
+
+    public void update(String title, String content) {
+        this.title = title;
+        this.content = content;
+    }
 }

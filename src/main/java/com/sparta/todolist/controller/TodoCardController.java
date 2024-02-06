@@ -1,6 +1,7 @@
 package com.sparta.todolist.controller;
 
 import com.sparta.todolist.dto.requestDto.TodoPostRequestDto;
+import com.sparta.todolist.dto.requestDto.UpateTodoRequest;
 import com.sparta.todolist.dto.responseDto.GetTodoResponseDto;
 import com.sparta.todolist.dto.responseDto.TodoPostResponseDto;
 import com.sparta.todolist.entity.TodoCard;
@@ -24,12 +25,14 @@ public class TodoCardController {
     private final TodoCardService todoCardService;
     private final JwtUtil jwtUtil;
 
+    // 카드 생성
     @PostMapping("/post")
     public ResponseEntity<TodoPostResponseDto> todoPost(@RequestBody TodoPostRequestDto todoPostRequestDto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
         TodoPostResponseDto todoPostResponseDto = todoCardService.todoPost(todoPostRequestDto, userDetails.getUser());
         return ResponseEntity.ok(todoPostResponseDto);
     }
 
+    // 전체 조회
     @GetMapping("/posts")
     public ResponseEntity<List<GetTodoResponseDto>> findAllTodoCard() {
         List<GetTodoResponseDto> todoList = todoCardService.findAll()
@@ -40,11 +43,20 @@ public class TodoCardController {
         return ResponseEntity.ok().body(todoList);
     }
 
+    // 단건 조회
     @GetMapping("/posts/{id}")
     public ResponseEntity<GetTodoResponseDto> findTodoCard(@PathVariable Long id) {
         TodoCard todoCard = todoCardService.findById(id);
 
         return ResponseEntity.ok().body(new GetTodoResponseDto(todoCard));
+    }
+
+    // 카드 업데이트
+    @PutMapping("/posts/{id}")
+    public ResponseEntity<TodoCard> updateTodo(@PathVariable Long id, @RequestBody UpateTodoRequest upateTodoRequest) {
+        TodoCard updateTodo = todoCardService.update(id, upateTodoRequest);
+
+        return ResponseEntity.ok().body(updateTodo);
     }
 }
 
