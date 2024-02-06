@@ -1,7 +1,7 @@
 package com.sparta.todolist.jwt;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.sparta.todolist.dto.requestDto.LoginRequestDto;
+import com.sparta.todolist.dto.requestDto.SigninRequestDto;
 import com.sparta.todolist.dto.responseDto.SigninResponseDto;
 import com.sparta.todolist.sercurity.UserDetailsImpl;
 import jakarta.servlet.FilterChain;
@@ -27,7 +27,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
         try {
-            LoginRequestDto requestDto = new ObjectMapper().readValue(request.getInputStream(), LoginRequestDto.class);
+            SigninRequestDto requestDto = new ObjectMapper().readValue(request.getInputStream(), SigninRequestDto.class);
 
             return getAuthenticationManager().authenticate(
                     new UsernamePasswordAuthenticationToken(

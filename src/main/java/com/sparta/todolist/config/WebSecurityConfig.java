@@ -5,13 +5,13 @@ import com.sparta.todolist.jwt.JwtAuthorizationFilter;
 import com.sparta.todolist.jwt.JwtUtil;
 import com.sparta.todolist.sercurity.UserDetailsServiceImpl;
 import lombok.RequiredArgsConstructor;
+import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -28,11 +28,13 @@ public class WebSecurityConfig {
     private final AuthenticationConfiguration authenticationConfiguration;
 
     // 시큐리티 커스터마이저
-/*    @Bean
+/*
+    @Bean
     public WebSecurityCustomizer webSecurityCustomizer() {
         return (web) -> web.ignoring()
                 .requestMatchers("/todolist/**");
-    }*/
+    }
+*/
 
     // 패스워드 인코더
     @Bean
@@ -60,7 +62,7 @@ public class WebSecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         // CSRF 설정
-        http.csrf(AbstractHttpConfigurer::disable);
+        http.csrf((csrf) -> csrf.disable());
 
         // 세션 사용하지 않고 JWT 채용
         http.sessionManagement((sessionManagement) ->
@@ -68,6 +70,9 @@ public class WebSecurityConfig {
 
         http.authorizeHttpRequests((authorizeHttpRequests) ->
                 authorizeHttpRequests
+                        .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll() // resources 접근 허용 설정
+                        .requestMatchers("/").permitAll() // 메인 페이지 요청 허가
+                        .requestMatchers("/todo/**").permitAll()
                         .requestMatchers("/auth/**").permitAll()    // 해당 루트 요청 모두 허가
                         .anyRequest().authenticated());     // 그 외 모든 요청 인증
 
